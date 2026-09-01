@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="UTF-8">
+<title>AKAI Distributors</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{
+  --navy:#0d1b3e;--navy2:#162250;--blue:#1a56db;--blue2:#3b82f6;
+  --accent:#f59e0b;--green:#10b981;--red:#ef4444;--orange:#f97316;
+  --border:#d1daf7;--text:#1e293b;--muted:#64748b;
+  --shadow:0 4px 24px rgba(13,27,62,.10);--r:14px;--rs:8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow-x:hidden}
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#e8eeff 0%,#f4f7ff 60%,#fdf6e3 100%);min-height:100vh;color:var(--text);-webkit-tap-highlight-color:transparent}
+
+/* ════ HEADER ════ */
+.header{background:linear-gradient(120deg,var(--navy),var(--navy2));padding:12px 14px 10px;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(13,27,62,.25);position:sticky;top:0;z-index:200;min-height:56px}
+.header-logo{width:38px;height:38px;min-width:38px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:13px;color:var(--navy);flex-shrink:0}
+.header-text{flex:1;min-width:0}
+.header-text h1{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.header-text p{font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.6px;text-transform:uppercase;margin-top:1px}
+.header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.header-date{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:3px 9px;font-size:10px;color:rgba(255,255,255,.7);font-weight:500;white-space:nowrap}
+
+/* ════ THREE-DOT MENU ════ */
+.menu-btn{width:32px;height:32px;border:none;background:rgba(255,255,255,.12);border-radius:8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex-shrink:0;transition:.15s}
+.menu-btn:active{background:rgba(255,255,255,.22)}
+.menu-btn span{width:4px;height:4px;background:#fff;border-radius:50%;display:block}
+.menu-dropdown{position:absolute;top:54px;right:10px;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(13,27,62,.22);overflow:hidden;z-index:9999;min-width:200px;border:1px solid rgba(209,218,247,.6);display:none}
+.menu-dropdown.open{display:block;animation:ddIn .15s ease}
+@keyframes ddIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.menu-item{display:flex;align-items:center;gap:10px;padding:13px 16px;cursor:pointer;transition:background .12s;border-bottom:1px solid #f0f4ff}
+.menu-item:last-child{border-bottom:none}
+.menu-item:active{background:#f0f4ff}
+.menu-item-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.menu-item-icon.qr{background:rgba(26,86,219,.1)}
+.menu-item-icon.bc{background:rgba(245,158,11,.1)}
+.menu-item-label{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--navy)}
+.menu-item-sub{font-size:10px;color:var(--muted);margin-top:1px}
+
+/* ════ CACHE BAR ════ */
+#cacheBar{background:var(--navy2);padding:4px 14px;font-size:10px;text-align:center;font-weight:500;transition:.3s}
+#cacheBar.loading{color:var(--accent)}
+#cacheBar.ready{color:rgba(16,185,129,.9)}
+#cacheBar.error{color:#f87171}
+
+/* ════ STEPPER ════ */
+.stepper{display:flex;align-items:center;justify-content:center;background:var(--navy2);padding:7px 16px 9px;gap:0}
+.step{display:flex;align-items:center;gap:6px;cursor:pointer}
+.step-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;border:2px solid rgba(255,255,255,.25);color:rgba(255,255,255,.4);transition:.25s;flex-shrink:0}
+.step-label{font-size:11px;color:rgba(255,255,255,.4);font-weight:500;transition:.25s;white-space:nowrap}
+.step.active .step-num{background:var(--accent);border-color:var(--accent);color:var(--navy)}
+.step.active .step-label{color:#fff}
+.step.done .step-num{background:var(--green);border-color:var(--green);color:#fff}
+.step.done .step-label{color:rgba(255,255,255,.7)}
+.step-line{flex:1;height:2px;background:rgba(255,255,255,.15);margin:0 8px;max-width:60px}
+
+/* ════ CONTAINER ════ */
+.container{padding:14px;max-width:560px;margin:0 auto}
+.page{display:none;animation:fadeIn .2s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ════ CARDS ════ */
+.card{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:14px;margin-bottom:12px;border:1px solid rgba(209,218,247,.5)}
+.card-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.1px;margin-bottom:11px;display:flex;align-items:center;gap:6px}
+.card-title::before{content:'';display:inline-block;width:3px;height:13px;background:var(--blue);border-radius:2px}
+
+/* ════ INPUTS ════ */
+.row{display:flex;gap:10px}
+.row .field{flex:1}
+.field{margin-bottom:9px}
+.field label{display:block;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px}
+input[type="text"],input[type="date"],input[list],select{width:100%;padding:11px 12px;font-size:14px;font-family:'DM Sans',sans-serif;border:1.5px solid var(--border);border-radius:var(--rs);background:#f8faff;color:var(--text);transition:border .18s,box-shadow .18s;outline:none;appearance:none;-webkit-appearance:none}
+input:focus,select:focus{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(59,130,246,.12);background:#fff}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
+
+/* ════ BUTTONS ════ */
+.btn-row{display:flex;gap:8px;margin-bottom:6px}
+.btn-row .btn{flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;border:none;border-radius:var(--rs);cursor:pointer;transition:transform .1s,opacity .18s;text-align:center;white-space:nowrap;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.btn:active{transform:scale(.96)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;box-shadow:0 3px 12px rgba(26,86,219,.28)}
+.btn-accent{background:linear-gradient(135deg,var(--accent),#f97316);color:var(--navy);box-shadow:0 3px 12px rgba(245,158,11,.28)}
+.btn-accent2{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;box-shadow:0 3px 12px rgba(124,58,237,.28)}
+.btn-success{background:linear-gradient(135deg,#059669,var(--green));color:#fff;box-shadow:0 3px 12px rgba(16,185,129,.28)}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text)}
+.btn-outline:active{border-color:var(--blue2);color:var(--blue);background:#f0f4ff}
+.btn-danger{background:var(--red);color:#fff}
+.btn-nav{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;box-shadow:0 3px 12px rgba(79,70,229,.3)}
+.btn-sm{padding:7px 10px;font-size:12px;border-radius:6px}
+
+/* ════ QR SCANNER (html5-qrcode, Product Mode) ════ */
+#readerBox{display:none;border-radius:var(--r);overflow:hidden;background:var(--navy);margin-bottom:12px}
+.scanner-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 0}
+.scanner-hdr span{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px}
+.pulse-dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+#closeScan{background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:50%;width:28px;height:28px;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#closeScan:active{background:var(--red)}
+#reader{width:100%}
+.scan-fb{text-align:center;padding:6px 12px 8px;font-size:12px;color:rgba(255,255,255,.6);min-height:32px}
+
+/* ════ BARCODE SCANNER (native, Spare Part Mode) ════ */
+#bcBox{display:none;border-radius:var(--r);overflow:hidden;background:#0a0a0f;margin-bottom:12px;position:relative}
+.bc-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 0;position:relative;z-index:5}
+.bc-hdr span{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px}
+.bc-hdr-btns{display:flex;align-items:center;gap:8px}
+#torchBc,#closeBc{background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:50%;width:28px;height:28px;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#torchBc.on{background:var(--accent);color:var(--navy)}
+#closeBc:active{background:var(--red)}
+.bc-video-wrap{position:relative;width:100%;height:200px;overflow:hidden}
+#bcVideo{width:100%;height:100%;object-fit:cover;display:block}
+.bc-vignette{position:absolute;inset:0;pointer-events:none;background:
+  linear-gradient(to bottom,rgba(0,0,0,.55) 0%,transparent 25%,transparent 75%,rgba(0,0,0,.55) 100%),
+  linear-gradient(to right,rgba(0,0,0,.45) 0%,transparent 15%,transparent 85%,rgba(0,0,0,.45) 100%)}
+.bc-window{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:86%;max-width:340px;height:72px;border-radius:6px;box-shadow:0 0 0 9999px rgba(0,0,0,.48);z-index:3}
+.bc-corner{position:absolute;width:20px;height:20px;border-color:#a855f7;border-style:solid}
+.bc-corner.tl{top:-1px;left:-1px;border-width:3px 0 0 3px;border-radius:5px 0 0 0}
+.bc-corner.tr{top:-1px;right:-1px;border-width:3px 3px 0 0;border-radius:0 5px 0 0}
+.bc-corner.bl{bottom:-1px;left:-1px;border-width:0 0 3px 3px;border-radius:0 0 0 5px}
+.bc-corner.br{bottom:-1px;right:-1px;border-width:0 3px 3px 0;border-radius:0 0 5px 0}
+.bc-laser{position:absolute;left:4px;right:4px;height:2px;background:linear-gradient(90deg,transparent 0%,#a855f7 20%,#a855f7 80%,transparent 100%);box-shadow:0 0 8px 2px #a855f788;border-radius:2px;animation:bcScan 1.6s ease-in-out infinite;top:10px;z-index:4}
+@keyframes bcScan{0%{top:10px;opacity:1}48%{opacity:1}50%{top:calc(100% - 12px);opacity:.6}98%{opacity:.6}100%{top:10px;opacity:1}}
+.bc-win-label{position:absolute;bottom:-22px;left:0;right:0;text-align:center;font-size:10px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase;z-index:5}
+.bc-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:9;transition:opacity .05s}
+.bc-flash.pop{opacity:.3}
+.bc-fb{text-align:center;padding:6px 12px 8px;font-size:12px;min-height:30px;color:rgba(255,255,255,.55)}
+#bcCanvas{display:none}
+
+/* ════ TABLE ════ */
+.table-wrap{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{background:linear-gradient(90deg,#e8eeff,#f0f4ff)}
+th{padding:9px 10px;text-align:center;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;border-bottom:2px solid var(--border)}
+td{padding:8px 10px;text-align:center;border-bottom:1px solid #eef1fb;vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+.tfoot-row{background:linear-gradient(90deg,#dbeafe,#eff6ff)}
+.tfoot-row td{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--navy);border-top:2px solid var(--border)}
+td input[type="number"],td input[type="text"]{width:68px;padding:5px 6px;font-size:12px;border:1.5px solid var(--border);border-radius:5px;background:#fff;text-align:center}
+.item-badge{display:inline-flex;align-items:center;background:var(--blue);color:#fff;border-radius:20px;padding:1px 9px;font-size:11px;font-weight:700;margin-left:7px}
+.empty-state{text-align:center;padding:24px 16px;color:var(--muted)}
+.empty-state p{font-size:12px;margin-top:6px}
+.status-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.status-label{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:5px}
+.exceeded-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.35);color:var(--red);border-radius:20px;padding:1px 8px;font-size:10px;font-weight:700;margin-left:5px;white-space:nowrap}
+.exceeded-row td{background:rgba(239,68,68,.03)}
+.filled-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.4);color:#b45309;border-radius:20px;padding:1px 8px;font-size:10px;font-weight:700;margin-left:5px;white-space:nowrap}
+.filled-row td{background:rgba(245,158,11,.03)}
+
+/* ════ CAMERA ════ */
+#cameraBox{display:none;text-align:center;background:var(--navy);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.cam-title{color:#fff;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;margin-bottom:10px}
+#video{border-radius:10px;border:2px solid rgba(255,255,255,.2);width:100%;max-width:300px}
+#canvas{display:none}
+#preview{margin-top:10px}
+#preview img{border-radius:10px;border:3px solid var(--green);max-width:180px}
+.cam-btns{display:flex;gap:8px;justify-content:center;margin-top:10px}
+
+/* ════ PROCESSING ════ */
+#processingOverlay{display:none;position:fixed;inset:0;background:rgba(13,27,62,.78);backdrop-filter:blur(4px);z-index:9999;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+#processingOverlay.active{display:flex}
+.spinner{width:50px;height:50px;border:4px solid rgba(255,255,255,.15);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing-text{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#fff}
+.processing-sub{font-size:11px;color:rgba(255,255,255,.5)}
+
+/* ════ TOASTS ════ */
+.toast-container{position:fixed;top:64px;right:10px;left:10px;z-index:10000;display:flex;flex-direction:column;align-items:flex-end;gap:8px;pointer-events:none}
+.toast{background:#fff;border-radius:var(--rs);box-shadow:0 8px 26px rgba(0,0,0,.18);padding:14px 18px;display:flex;align-items:center;gap:11px;font-size:15px;font-weight:600;border-left:6px solid var(--blue);animation:slideIn .22s ease;max-width:88%;line-height:1.35}
+.toast span:first-child{font-size:20px;flex-shrink:0}
+.toast.success{border-color:var(--green)}
+.toast.error{border-color:var(--red)}
+.toast.warning{border-color:var(--accent)}
+@keyframes slideIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ════ SCAN FLASH ════ */
+.scan-flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:999;transition:opacity .05s}
+.scan-flash.flash{opacity:.3}
+
+/* ════ PHOTO CONFIRMED ════ */
+.photo-confirmed{display:flex;align-items:center;gap:10px;background:rgba(16,185,129,.08);border:1.5px solid var(--green);border-radius:var(--rs);padding:10px 12px;margin-bottom:10px}
+.photo-confirmed img{width:52px;height:40px;object-fit:cover;border-radius:6px;border:2px solid var(--green)}
+.photo-confirmed .pc-text{font-size:12px;color:#059669;font-weight:600}
+.photo-confirmed .pc-sub{font-size:11px;color:var(--muted);margin-top:1px}
+
+/* ════ BILL ════ */
+#bill{display:none;background:#fff;padding:24px;width:580px;position:fixed;left:-9999px;top:0}
+
+/* ════ SCAN MODE BADGE ════ */
+.scan-mode-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;border-radius:20px;padding:3px 10px;margin-bottom:8px;letter-spacing:.5px}
+.scan-mode-badge.qr{background:rgba(26,86,219,.08);border:1px solid rgba(26,86,219,.2);color:var(--blue)}
+.scan-mode-badge.bc{background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);color:#7c3aed}
+
+/* ════ DOC TYPE BADGE ════ */
+.doc-mode-badge{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:700;border-radius:20px;padding:2px 9px;letter-spacing:.6px;text-transform:uppercase;white-space:nowrap}
+.doc-mode-badge.challan{background:rgba(255,255,255,.12);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.2)}
+.doc-mode-badge.order{background:rgba(245,158,11,.22);color:#fde68a;border:1px solid rgba(245,158,11,.4)}
+
+/* ════ MENU SECTION LABEL ════ */
+.menu-section-label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;padding:9px 16px 4px;background:#f8faff}
+
+/* ════ ADD ITEM BOX ════ */
+#addItemBox{display:none;margin-top:10px}
+#addItemBox label{display:block;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px}
+.add-item-row{display:flex;gap:6px;align-items:center}
+#addItemInput{flex:1;padding:10px 12px;font-size:13px;border:1.5px solid var(--border);border-radius:8px;background:#fff}
+</style>
+</head>
+<body>
+
+<div id="processingOverlay">
+  <div class="spinner"></div>
+  <div class="processing-text">Submitting Data...</div>
+  <div class="processing-sub">Please wait, do not close this page</div>
+</div>
+
+<div class="scan-flash" id="scanFlash"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ════ HEADER ════ -->
+<div class="header" style="position:relative">
+  <div class="header-logo">AD</div>
+  <div class="header-text">
+    <h1>AKAI DISTRIBUTORS</h1>
+    <p id="headerSubtitle">Approval Challan</p>
+  </div>
+  <div class="header-right">
+    <span class="doc-mode-badge challan" id="docModeBadge">🧾 Challan</span>
+    <div class="header-date" id="headerDate"></div>
+    <button class="menu-btn" onclick="toggleMenu()" id="menuBtn" aria-label="Options">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="menu-dropdown" id="menuDropdown">
+    <div class="menu-section-label">Document Type</div>
+    <div class="menu-item" onclick="switchDocType('challan')">
+      <div class="menu-item-icon" style="background:rgba(26,86,219,.1)">🧾</div>
+      <div>
+        <div class="menu-item-label">Challan Mode</div>
+        <div class="menu-item-sub">Approval Challan — dealer orders</div>
+      </div>
+    </div>
+    <div class="menu-item" onclick="switchDocType('order')">
+      <div class="menu-item-icon" style="background:rgba(245,158,11,.12)">🛍️</div>
+      <div>
+        <div class="menu-item-label">Order Mode</div>
+        <div class="menu-item-sub">Product Showcase — auto order no.</div>
+      </div>
+    </div>
+    <div class="menu-section-label">Scan Mode</div>
+    <div class="menu-item" onclick="switchScanMode('qr')">
+      <div class="menu-item-icon qr">📦</div>
+      <div>
+        <div class="menu-item-label">Product Scanner</div>
+        <div class="menu-item-sub">QR code — product lookup</div>
+      </div>
+    </div>
+    <div class="menu-item" onclick="switchScanMode('barcode')">
+      <div class="menu-item-icon bc">🔧</div>
+      <div>
+        <div class="menu-item-label">Spare Part Scanner</div>
+        <div class="menu-item-sub">Barcode — spare part lookup</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="cacheBar" class="loading">⏳ Loading product cache…</div>
+
+<div class="stepper">
+  <div class="step active" id="step1tab" onclick="goPage(1)">
+    <div class="step-num">1</div>
+    <div class="step-label">Entry</div>
+  </div>
+  <div class="step-line"></div>
+  <div class="step" id="step2tab" onclick="goPage(2)">
+    <div class="step-num">2</div>
+    <div class="step-label">Confirm &amp; Submit</div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 1 ══════════════════ -->
+<div class="page active" id="page1">
+<div class="container">
+
+  <div class="card">
+    <div class="card-title">Order Details</div>
+    <div class="row">
+      <div class="field">
+        <label id="challanLabel">Challan No.</label>
+        <input type="text" id="challan" placeholder="e.g. 93,40">
+      </div>
+      <div class="field">
+        <label>Date</label>
+        <input type="date" id="date">
+      </div>
+    </div>
+    <div class="field">
+      <label>Sales Officer (SO)</label>
+      <select id="dealer">
+        <option value="">— Select SO —</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Dealer Name</label>
+      <input list="dealerList" id="dealerName" placeholder="Type to search dealer...">
+      <datalist id="dealerList"></datalist>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Scan &amp; Entry</div>
+
+    <div id="scanModeBadge" class="scan-mode-badge qr">📦 Product Scanner (QR)</div>
+
+    <div class="btn-row">
+      <button class="btn btn-accent" onclick="openQRScanner()" id="scanQRBtn">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+        Scan QR
+      </button>
+      <button class="btn btn-accent2" onclick="openBCScanner()" id="scanBCBtn" style="display:none">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="3" height="16"/><rect x="7" y="4" width="1" height="16"/><rect x="10" y="4" width="2" height="16"/><rect x="15" y="4" width="1" height="16"/><rect x="18" y="4" width="3" height="16"/></svg>
+        Scan Barcode
+      </button>
+      <button class="btn btn-outline" onclick="toggleEdit()" id="editBtn">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Manual
+      </button>
+    </div>
+
+    <div id="readerBox">
+      <div class="scanner-hdr">
+        <span><div class="pulse-dot"></div>QR Scanner Active</span>
+        <button id="closeScan" onclick="closeQRScanner()">×</button>
+      </div>
+      <div id="reader"></div>
+      <div class="scan-fb" id="scanFeedback">Point camera at QR code</div>
+    </div>
+
+    <div id="bcBox">
+      <div class="bc-hdr">
+        <span><div class="pulse-dot" style="background:#a855f7"></div>Barcode Scanner Active</span>
+        <div class="bc-hdr-btns">
+          <button id="torchBc" onclick="toggleTorch()" style="display:none" title="Toggle flashlight">🔦</button>
+          <button id="closeBc" onclick="closeBCScanner()">×</button>
+        </div>
+      </div>
+      <div class="bc-video-wrap">
+        <video id="bcVideo" autoplay playsinline muted></video>
+        <div class="bc-vignette"></div>
+        <div class="bc-window">
+          <div class="bc-corner tl"></div>
+          <div class="bc-corner tr"></div>
+          <div class="bc-corner bl"></div>
+          <div class="bc-corner br"></div>
+          <div class="bc-laser"></div>
+          <div class="bc-win-label">Align barcode within frame</div>
+        </div>
+        <div class="bc-flash" id="bcFlash"></div>
+      </div>
+      <div class="bc-fb" id="bcFeedback">Point camera at barcode</div>
+      <canvas id="bcCanvas"></canvas>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="status-bar">
+      <div class="status-label">Items<span class="item-badge" id="itemCount">0</span></div>
+      <div style="font-size:11px;color:var(--muted)">Total Qty: <b id="tQtyTop">0</b></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left">Variant</th>
+            <th>Qty</th>
+            <th>MRP ₹</th>
+            <th>Total ₹</th>
+            <th id="editHead" style="display:none">Act</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="5"><div class="empty-state"><svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><p>No items yet.<br>Scan or add manually.</p></div></td></tr>
+        </tbody>
+        <tfoot>
+          <tr class="tfoot-row">
+            <td><b>TOTAL</b></td>
+            <td id="tQty">0</td>
+            <td id="tMrp">₹0</td>
+            <td id="tTotal">₹0</td>
+            <td id="tActionFoot" style="display:none"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- MANUAL ADD ITEM BOX — fixed, always present in manual mode -->
+    <div id="addItemBox">
+      <label>Add Item (type to search Stock Sheet)</label>
+      <div class="add-item-row">
+        <input list="stockVariantList" id="addItemInput" placeholder="Type variant name..." autocomplete="off"
+               onkeydown="if(event.key==='Enter'){event.preventDefault();addItemFromInput();}">
+        <button class="btn btn-accent" style="white-space:nowrap;padding:10px 16px" onclick="addItemFromInput()">＋ Add</button>
+      </div>
+      <datalist id="stockVariantList"></datalist>
+    </div>
+  </div>
+
+  <div class="card" style="padding:12px">
+    <button class="btn btn-nav" style="width:100%;padding:13px;font-size:14px" onclick="goToPage2()">
+      Next: Confirmation &amp; Submit
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════ PAGE 2 ══════════════════ -->
+<div class="page" id="page2">
+<div class="container">
+
+  <div class="card">
+    <div class="card-title">Order Summary</div>
+    <div id="summaryBox"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Confirmation Photo / Signature</div>
+    <div id="photoConfirmedBox" style="display:none"></div>
+
+    <!-- Mode chooser: Photo (preferred) or Signature (fallback) -->
+    <div id="confirmChooser" style="display:flex;gap:8px;margin-bottom:8px">
+      <button class="btn btn-outline" onclick="openCamera()" style="flex:1" id="openCamBtn">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        Photo
+      </button>
+      <button class="btn btn-outline" onclick="openSign()" style="flex:1" id="openSignBtn">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 17.5V21h3.5L17 10.5l-3.5-3.5L3 17.5z"/><path d="M14.5 6.5l3 3"/></svg>
+        Sign
+      </button>
+    </div>
+    <div style="text-align:center;font-size:10px;color:var(--muted);margin-bottom:8px" id="confirmHint">Photo is preferred. Use Sign only if the camera/photo isn't working.</div>
+
+    <div id="cameraBox">
+      <div class="cam-title">📷 Live Camera</div>
+      <video id="video" autoplay playsinline></video>
+      <div class="cam-btns">
+        <button class="btn btn-success btn-sm" onclick="capturePhoto()">📸 Capture</button>
+        <button class="btn btn-outline btn-sm" onclick="retakePhoto()">🔄 Retake</button>
+      </div>
+      <canvas id="canvas"></canvas>
+      <div id="preview"></div>
+    </div>
+
+    <!-- Signature pad -->
+    <div id="signBox" style="display:none;text-align:center;background:var(--navy);border-radius:var(--r);padding:14px;margin-bottom:12px">
+      <div class="cam-title" style="color:#fff;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;margin-bottom:10px">✍️ Sign Below</div>
+      <canvas id="signCanvas" style="background:#fff;border-radius:10px;border:2px solid rgba(255,255,255,.2);width:100%;max-width:320px;height:160px;touch-action:none"></canvas>
+      <div class="cam-btns" style="display:flex;gap:8px;justify-content:center;margin-top:10px">
+        <button class="btn btn-success btn-sm" onclick="saveSign()">✔ Save Sign</button>
+        <button class="btn btn-outline btn-sm" onclick="clearSign()">🔄 Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:12px">
+    <button class="btn btn-success" style="width:100%;padding:13px;font-size:15px" onclick="submitData()" id="submitBtn">
+      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+      Submit &amp; Download
+    </button>
+    <div style="text-align:center;margin-top:7px;font-size:11px;color:var(--muted)">Matched items download as challan. Items with exceeded qty stay on screen.</div>
+  </div>
+
+  <div class="card" style="padding:12px">
+    <button class="btn btn-outline" style="width:100%;padding:12px" onclick="goPage(1)">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      Back to Entry
+    </button>
+  </div>
+
+</div>
+</div>
+
+<div id="bill"></div>
+
+<script>
+/* ════ CONFIG ════ */
+const BILL_NUMBER_OFFSET = 0;
+const API_URL = "https://script.google.com/macros/s/AKfycbx8IA_aq1feOgIWnXB3gF_VuS-bNi7ACaNobZdlj8CfYTbOGfAmrK6E63ehRUBEID7p/exec";
+
+/* ════ DOCUMENT TYPE CONFIG ════
+   "challan"  → existing Approval Challan flow, writes to the Challan sheet.
+   "order"    → new Product Showcase / Order flow. Same scanners, same Stock
+                Sheet matching, but uses an auto-incrementing Order No. and
+                writes to a SEPARATE sheet on the backend (see docType param
+                sent in submitData). Everything else behaves identically. */
+const DOC_CONFIG = {
+  challan: {
+    title:"Approval Challan",
+    badge:"🧾 Challan",
+    numberLabel:"Challan No.",
+    numberPlaceholder:"e.g. 93,40",
+    deliveryLabel:"Delivery Number",
+    summaryNumberLabel:"Challan",
+    billSubtitle:"Approval Challan",
+    filePrefix:"AKAI_CH",
+    autoNumber:false
+  },
+  order: {
+    title:"Product Showcase",
+    badge:"🛍️ Order",
+    numberLabel:"Order No.",
+    numberPlaceholder:"Auto — edit to start elsewhere",
+    deliveryLabel:"Order Number",
+    summaryNumberLabel:"Order No.",
+    billSubtitle:"Product Showcase — Order Slip",
+    filePrefix:"AKAI_ORD",
+    autoNumber:true
+  }
+};
+
+/* ════ STATE ════ */
+let docType     = "challan"; // 'challan' | 'order'
+let items       = {};
+let qrScanner   = null;
+let qrScanning  = false;
+let manualMode  = false;
+let photoData   = "";
+let confirmType = "";   // "photo" or "sign" — which confirmation method was used
+let camStream   = null;
+let currentPage = 1;
+let activeScanMode = "qr";
+let lastBillNo  = "";   // delivery/bill number returned by server after submit
+
+/* ════ CACHE ════
+   stockCache    : keyed by UID  → {variant, mrp}   (used by scanners)
+   variantCache  : keyed by lowercase variant name → {variant, mrp}  (manual add MRP autofill)
+   variantNames  : sorted list of all variant names (autocomplete suggestions)
+   This dual cache is the FIX — manual add no longer depends on a UID existing. */
+let stockCache    = {};
+let variantCache  = {};
+let variantNames  = [];
+let cacheReady    = false;
+
+/* ════ BARCODE ENGINE ════ */
+let bcDetector  = null;
+let bcZXing     = null;
+let bcUseZXing  = false;
+let bcStream    = null;
+let bcLoopActive= false;
+let bcRafId     = null;
+let bcDecoding  = false;
+let bcTorchOn   = false;
+
+/* ════ SMART DEDUP ════ */
+const SAME_CODE_COOLDOWN = 2000; // spare-part barcode (fast)
+const SAME_QR_COOLDOWN   = 3500; // product QR (slower — prevents multi-add of same product)
+let lastBcCode  = "";
+let lastBcTime  = 0;
+let lastQrCode  = "";
+let lastQrTime  = 0;
+
+/* ════ BEEP ════ */
+const beep = (() => {
+  try {
+    const actx = new (window.AudioContext || window.webkitAudioContext)();
+    return () => {
+      try {
+        const t=actx.currentTime, o=actx.createOscillator(), g=actx.createGain();
+        o.connect(g); g.connect(actx.destination);
+        o.type="square";
+        o.frequency.setValueAtTime(1200,t);
+        o.frequency.linearRampToValueAtTime(1800,t+0.08);
+        g.gain.setValueAtTime(0,t);
+        g.gain.linearRampToValueAtTime(0.22,t+0.005);
+        g.gain.setValueAtTime(0.22,t+0.06);
+        g.gain.linearRampToValueAtTime(0,t+0.1);
+        o.start(t); o.stop(t+0.1);
+      } catch(e){}
+    };
+  } catch(e){ return ()=>{}; }
+})();
+
+/* ════ DATE DISPLAY HELPER ════
+   Converts an input-date string "YYYY-MM-DD" → "DD.MM.YYYY" for DISPLAY only.
+   The actual <input type="date"> value and the value sent to the sheet stay
+   in YYYY-MM-DD (HTML standard) so no logic breaks. */
+function fmtDate(d){
+  const s=String(d||"").trim();
+  const m=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m) return m[3]+"."+m[2]+"."+m[1]; // DD.MM.YYYY
+  return s; // leave anything unexpected as-is
+}
+
+/* ════ INIT ════ */
+window.onload = function() {
+  const today = new Date();
+  document.getElementById("date").value = today.toISOString().split("T")[0];
+  const dd=String(today.getDate()).padStart(2,"0");
+  const mm=String(today.getMonth()+1).padStart(2,"0");
+  const yyyy=today.getFullYear();
+  document.getElementById("headerDate").textContent = dd+"."+mm+"."+yyyy;
+  loadDealers();
+  loadSO();
+  loadStockCache();
+  initBarcodeDetector();
+  document.addEventListener("click", e => {
+    if (!e.target.closest("#menuBtn") && !e.target.closest("#menuDropdown"))
+      document.getElementById("menuDropdown").classList.remove("open");
+  });
+  // If the app is backgrounded (tab hidden / phone locked), stop the scanners
+  // so the decode loop & camera don't keep running and freeze the page.
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      if (qrScanning) closeQRScanner();
+      if (bcStream)   closeBCScanner();
+    }
+  });
+};
+
+/* ════ DEALERS — Master Dealer column A ════ */
+function loadDealers() {
+  fetch(API_URL+"?type=dealers")
+    .then(r=>r.json())
+    .then(data=>{
+      const list=document.getElementById("dealerList");
+      list.innerHTML="";
+      data.forEach(d=>{const o=document.createElement("option");o.value=d;list.appendChild(o);});
+    }).catch(()=>{});
+}
+
+/* ════ SO — Master Dealer column B ════ */
+function loadSO() {
+  fetch(API_URL+"?type=so")
+    .then(r=>r.json())
+    .then(data=>{
+      const sel=document.getElementById("dealer");
+      sel.innerHTML='<option value="">— Select SO —</option>';
+      data.forEach(name=>{
+        const o=document.createElement("option");
+        o.value=name; o.textContent=name;
+        sel.appendChild(o);
+      });
+    }).catch(()=>{});
+}
+
+/* ════ CACHE — builds BOTH the UID cache and the variant cache ════ */
+function loadStockCache() {
+  const bar=document.getElementById("cacheBar");
+  bar.className="loading"; bar.textContent="⏳ Loading product cache…";
+  fetch(API_URL+"?type=stockcache")
+    .then(r=>r.json())
+    .then(data=>{
+      stockCache={}; variantCache={}; variantNames=[];
+      const seen={};
+      if(Array.isArray(data)){
+        data.forEach(row=>{
+          const uid=String(row.uid||"").trim();
+          const variant=String(row.variant||"").trim();
+          const mrp=Number(row.mrp)||0;
+          // UID cache (scanners) — only rows that have a UID
+          if(uid) stockCache[uid]={variant:variant,mrp:mrp};
+          // Variant cache + names (manual add) — EVERY row that has a variant name
+          if(variant){
+            const lc=variant.toLowerCase();
+            variantCache[lc]={variant:variant,mrp:mrp};
+            if(!seen[lc]){ seen[lc]=1; variantNames.push(variant); }
+          }
+        });
+      }
+      variantNames.sort();
+      cacheReady=true;
+      const count=Object.keys(stockCache).length;
+      const vcount=variantNames.length;
+      bar.className="ready"; bar.textContent=`✅ ${count} products / ${vcount} variants loaded`;
+      setTimeout(()=>{bar.style.display="none";},3000);
+    })
+    .catch(()=>{
+      bar.className="error"; bar.textContent="⚠ Cache load failed — live lookup per scan";
+      setTimeout(()=>{bar.style.display="none";},4000);
+    });
+}
+
+/* ════ UID LOOKUP (scanners) ════ */
+function lookupUID(uid) {
+  const key=String(uid).trim();
+  if(cacheReady && stockCache[key]) return Promise.resolve(stockCache[key]);
+  return fetch(API_URL+"?uid="+encodeURIComponent(uid))
+    .then(r=>r.json())
+    .then(d=>d.variant?d:null);
+}
+
+/* ════ VARIANT LOOKUP (manual add) — fast, case-insensitive ════ */
+function lookupMrpByVariant(name){
+  const target=String(name).trim().toLowerCase();
+  if(!target) return null;
+  if(variantCache[target]){
+    return { variant: variantCache[target].variant, mrp: Number(variantCache[target].mrp)||0 };
+  }
+  return null;
+}
+
+/* ════ BARCODE CLEANER + SUFFIX QTY ════ */
+function cleanBarcodeValue(raw) {
+  return raw.replace(/\/{1,2}\d+$/, "").trim();
+}
+function parseBarcodeSuffix(raw) {
+  const s = String(raw).trim();
+  const m = s.match(/\/{1,2}(1|5|10)$/);
+  if (m) {
+    const qty = Number(m[1]);
+    const code = s.replace(/\/{1,2}(1|5|10)$/, "").trim();
+    return { code: code, qty: qty };
+  }
+  return { code: cleanBarcodeValue(s), qty: 1 };
+}
+
+/* ════ THREE-DOT MENU ════ */
+function toggleMenu() {
+  document.getElementById("menuDropdown").classList.toggle("open");
+}
+function switchScanMode(mode) {
+  document.getElementById("menuDropdown").classList.remove("open");
+  if(qrScanning) closeQRScanner();
+  if(bcStream)   closeBCScanner();
+  activeScanMode = mode;
+  const badge=document.getElementById("scanModeBadge");
+  const qrBtn=document.getElementById("scanQRBtn");
+  const bcBtn=document.getElementById("scanBCBtn");
+  if(mode === "qr") {
+    badge.className="scan-mode-badge qr"; badge.textContent="📦 Product Scanner (QR)";
+    qrBtn.style.display=""; bcBtn.style.display="none";
+    showToast("Switched to Product Scanner (QR)","info",2000);
+  } else {
+    badge.className="scan-mode-badge bc"; badge.textContent="🔧 Spare Part Scanner (Barcode)";
+    qrBtn.style.display="none"; bcBtn.style.display="";
+    showToast("Switched to Spare Part Scanner (Barcode)","info",2000);
+  }
+}
+
+/* ════ DOCUMENT TYPE SWITCH — Challan  ⇄  Order (Product Showcase) ════
+   Switching clears the current entry (number field + items) since the two
+   flows write to different sheets and shouldn't mix line items. Scan mode
+   (QR/Barcode), dealer/SO lists and the Stock Sheet cache are shared as-is. */
+function switchDocType(type){
+  document.getElementById("menuDropdown").classList.remove("open");
+  if(type !== "challan" && type !== "order") return;
+  if(type === docType){ return; }
+  docType = type;
+  const cfg = DOC_CONFIG[docType];
+
+  document.getElementById("headerSubtitle").textContent = cfg.title;
+  const dBadge = document.getElementById("docModeBadge");
+  dBadge.className = "doc-mode-badge " + docType;
+  dBadge.textContent = cfg.badge;
+
+  document.getElementById("challanLabel").textContent = cfg.numberLabel;
+  const numInput = document.getElementById("challan");
+  numInput.placeholder = cfg.numberPlaceholder;
+  numInput.value = "";
+
+  // Reset in-progress entry — Challan and Order lines are never mixed.
+  items = {}; render();
+  lastBillNo = "";
+  resetConfirm();
+
+  if(cfg.autoNumber){
+    fetchNextOrderNo();
+  }
+
+  showToast("Switched to "+cfg.title,"info",2200);
+  goPage(1);
+}
+
+/* ════ AUTO ORDER NUMBER (Order mode only) ════
+   Asks the backend for the next order number (based on how many rows already
+   exist in the Order sheet, auto-starting at 1). The field stays a normal
+   editable text input, so the user can type any other starting number and
+   it will simply be used/continued from there on the next submit. */
+function fetchNextOrderNo(){
+  const numInput=document.getElementById("challan");
+  numInput.placeholder="Loading order no…";
+  fetch(API_URL+"?type=nextorder")
+    .then(r=>r.json())
+    .then(d=>{
+      const n=(d && d.nextOrderNo!==undefined && d.nextOrderNo!==null) ? d.nextOrderNo : 1;
+      numInput.value=n;
+      numInput.placeholder=DOC_CONFIG.order.numberPlaceholder;
+    })
+    .catch(()=>{
+      numInput.value=1;
+      numInput.placeholder=DOC_CONFIG.order.numberPlaceholder;
+      showToast("Couldn't fetch next order no. — starting at 1 (editable)","warning",3000);
+    });
+}
+
+/* ════ QR SCANNER — Product Mode (SLOWED to fps:8 + 3500ms cooldown) ════ */
+function openQRScanner() {
+  document.getElementById("readerBox").style.display="block";
+  if(qrScanning) return;
+  qrScanner = new Html5Qrcode("reader",{verbose:false});
+  qrScanner.start(
+    {facingMode:"environment"},
+    {fps:8, qrbox:{width:220,height:220}, aspectRatio:1.0, disableFlip:false,
+     experimentalFeatures:{useBarCodeDetectorIfSupported:true}},
+    code => {
+      const now = Date.now();
+      if(code === lastQrCode && (now - lastQrTime) < SAME_QR_COOLDOWN) return;
+      lastQrCode = code;
+      lastQrTime = now;
+      const flash=document.getElementById("scanFlash");
+      flash.classList.add("flash"); setTimeout(()=>flash.classList.remove("flash"),110);
+      beep();
+      document.getElementById("scanFeedback").textContent="🔍 "+code.substring(0,20)+"…";
+      lookupUID(code)
+        .then(data=>{
+          if(!data||!data.variant){
+            showToast("Not found: "+code.substring(0,14),"error");
+            document.getElementById("scanFeedback").textContent="❌ Item not found";
+            lastQrTime = now - SAME_QR_COOLDOWN + 3000;
+          } else {
+            addOrIncrItem(data.variant, Number(data.mrp)||0);
+            document.getElementById("scanFeedback").textContent="✅ "+data.variant+" ×"+items[data.variant].qty;
+            showToast(data.variant+" ×"+items[data.variant].qty,"success",1600);
+          }
+        })
+        .catch(()=>{
+          showToast("Lookup error","error");
+          document.getElementById("scanFeedback").textContent="❌ Error";
+          lastQrTime = 0;
+        });
+    },
+    ()=>{}
+  );
+  qrScanning=true;
+}
+function closeQRScanner() {
+  if(qrScanner && qrScanning) {
+    qrScanner.stop()
+      .then(()=>{qrScanning=false; document.getElementById("readerBox").style.display="none"; lastQrCode=""; lastQrTime=0;})
+      .catch(()=>{qrScanning=false; document.getElementById("readerBox").style.display="none"; lastQrCode=""; lastQrTime=0;});
+  }
+}
+
+/* ════ BARCODE ENGINE INIT ════
+   Loads BOTH engines when possible: the native BarcodeDetector (fast, GPU
+   accelerated on supporting Android/Chrome builds) AND ZXing (works
+   everywhere, including iOS Safari where BarcodeDetector doesn't exist).
+   Restricting ZXing to the actual 1D formats used on spare-part barcodes
+   (instead of trying every symbology) makes each decode attempt noticeably
+   faster and less prone to a wrong/garbled read. */
+const BC_1D_FORMATS = ["code_128","code_39","code_93","ean_13","ean_8","upc_a","upc_e","itf","codabar"];
+async function initBarcodeDetector() {
+  if("BarcodeDetector" in window) {
+    try {
+      const supported = await BarcodeDetector.getSupportedFormats();
+      const has1D = supported.some(f=>BC_1D_FORMATS.includes(f));
+      if(has1D) {
+        const formats = supported.filter(f=>BC_1D_FORMATS.includes(f));
+        bcDetector = new BarcodeDetector({formats: formats.length?formats:supported});
+      }
+    } catch(e){}
+  }
+  await loadZXing();
+}
+function loadZXing(){
+  if(bcZXing) return Promise.resolve();
+  return new Promise(resolve=>{
+    const s=document.createElement("script");
+    s.src="https://cdnjs.cloudflare.com/ajax/libs/zxing-js/0.20.0/index.min.js";
+    s.onload=()=>{
+      try {
+        const hints = new Map();
+        if(window.ZXing && ZXing.BarcodeFormat){
+          const fmts=[ZXing.BarcodeFormat.CODE_128,ZXing.BarcodeFormat.CODE_39,ZXing.BarcodeFormat.CODE_93,
+                       ZXing.BarcodeFormat.EAN_13,ZXing.BarcodeFormat.EAN_8,ZXing.BarcodeFormat.UPC_A,
+                       ZXing.BarcodeFormat.UPC_E,ZXing.BarcodeFormat.ITF,ZXing.BarcodeFormat.CODABAR];
+          hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, fmts);
+          hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
+        }
+        bcZXing=new ZXing.BrowserMultiFormatReader(hints);
+        bcUseZXing = !bcDetector; // prefer native detector when available; ZXing is the fallback engine
+      } catch(e){}
+      resolve();
+    };
+    s.onerror=()=>resolve();
+    document.head.appendChild(s);
+  });
+}
+
+/* ════ BARCODE SCANNER OPEN/CLOSE — Spare Part Mode ════
+   Fixes vs the old version:
+   1. Requests continuous autofocus so close-up barcodes aren't blurry (the
+      single biggest cause of failed reads on phone cameras).
+   2. Adds a flashlight/torch toggle for dim warehouse lighting.
+   3. Decoding now runs in a self-scheduling requestAnimationFrame loop
+      instead of a fixed setInterval — a frame is only grabbed once the
+      previous decode has fully finished, so slow devices never pile up
+      overlapping decode attempts (which was freezing/starving the loop). */
+async function openBCScanner() {
+  const box = document.getElementById("bcBox");
+  box.style.display="block";
+  if(bcStream){ startBcLoop(); return; }
+  const baseConstraints = {
+    facingMode:{ideal:"environment"}, width:{ideal:1920}, height:{ideal:1080},
+    advanced:[{focusMode:"continuous"}]
+  };
+  try {
+    bcStream = await navigator.mediaDevices.getUserMedia({video: baseConstraints});
+  } catch(e) {
+    // Some browsers reject unknown "advanced" constraints outright — retry without them.
+    try {
+      bcStream = await navigator.mediaDevices.getUserMedia({
+        video:{facingMode:{ideal:"environment"}, width:{ideal:1920}, height:{ideal:1080}}
+      });
+    } catch(e2) {
+      showToast("Camera access denied","error");
+      document.getElementById("bcBox").style.display="none";
+      bcStream=null;
+      return;
+    }
+  }
+  const vid=document.getElementById("bcVideo");
+  vid.srcObject=bcStream;
+  try { await vid.play(); } catch(e){}
+
+  // Torch button — only shown if the device/track actually supports it.
+  const track = bcStream.getVideoTracks()[0];
+  bcTorchOn=false;
+  const torchBtn=document.getElementById("torchBc");
+  torchBtn.classList.remove("on");
+  try {
+    const caps = track.getCapabilities ? track.getCapabilities() : {};
+    torchBtn.style.display = caps.torch ? "flex" : "none";
+  } catch(e){ torchBtn.style.display="none"; }
+
+  document.getElementById("bcFeedback").textContent="Point camera at barcode";
+  bcDecoding=false; lastBcCode=""; lastBcTime=0;
+  startBcLoop();
+  try{ if("wakeLock" in navigator) navigator.wakeLock.request("screen"); }catch(e){}
+}
+function closeBCScanner() {
+  stopBcLoop();
+  if(bcStream){ bcStream.getTracks().forEach(t=>t.stop()); bcStream=null; }
+  const vid=document.getElementById("bcVideo");
+  vid.srcObject=null;
+  document.getElementById("bcBox").style.display="none";
+  document.getElementById("torchBc").style.display="none";
+  bcDecoding=false; lastBcCode=""; lastBcTime=0; bcTorchOn=false;
+}
+function startBcLoop(){
+  if(bcLoopActive) return;
+  bcLoopActive=true;
+  const loop=async()=>{
+    if(!bcLoopActive) return;
+    await bcDecodeFrame();
+    if(bcLoopActive) bcRafId=requestAnimationFrame(loop);
+  };
+  bcRafId=requestAnimationFrame(loop);
+}
+function stopBcLoop(){
+  bcLoopActive=false;
+  if(bcRafId){ cancelAnimationFrame(bcRafId); bcRafId=null; }
+}
+function toggleTorch(){
+  if(!bcStream) return;
+  const track=bcStream.getVideoTracks()[0];
+  if(!track) return;
+  bcTorchOn=!bcTorchOn;
+  track.applyConstraints({advanced:[{torch:bcTorchOn}]})
+    .then(()=>document.getElementById("torchBc").classList.toggle("on",bcTorchOn))
+    .catch(()=>{ bcTorchOn=!bcTorchOn; showToast("Flashlight not supported on this device","warning",2000); });
+}
+
+/* ════ CROP RECT — maps the visible scan window (the purple-cornered box)
+   to actual video pixel coordinates, accounting for object-fit:cover.
+   Decoding only this region (instead of the whole noisy frame) is the
+   second big reliability fix: it removes background clutter and lets us
+   upscale just the barcode area for far more pixels-per-bar. ════ */
+function getBcCropRect(vid){
+  const wrap=document.querySelector(".bc-video-wrap");
+  const winEl=document.querySelector(".bc-window");
+  if(!wrap || !winEl) return null;
+  const wrapRect=wrap.getBoundingClientRect();
+  const winRect=winEl.getBoundingClientRect();
+  const vw=vid.videoWidth, vh=vid.videoHeight;
+  if(!vw || !vh || !wrapRect.width || !wrapRect.height) return null;
+  const scale=Math.max(wrapRect.width/vw, wrapRect.height/vh);
+  const dispW=vw*scale, dispH=vh*scale;
+  const offX=(dispW-wrapRect.width)/2, offY=(dispH-wrapRect.height)/2;
+  const winLeft=winRect.left-wrapRect.left, winTop=winRect.top-wrapRect.top;
+  // Generous padding around the guide box so a slightly off-center barcode still decodes.
+  const padX=winRect.width*0.10, padY=winRect.height*0.55;
+  let sx=(winLeft+offX-padX)/scale;
+  let sy=(winTop+offY-padY)/scale;
+  let sw=(winRect.width+padX*2)/scale;
+  let sh=(winRect.height+padY*2)/scale;
+  sx=Math.max(0,sx); sy=Math.max(0,sy);
+  sw=Math.min(sw, vw-sx); sh=Math.min(sh, vh-sy);
+  if(sw<20 || sh<20) return null;
+  return {sx,sy,sw,sh};
+}
+
+/* ════ BARCODE DECODE FRAME ════
+   Crops to the scan window, upscales it (small barcodes get far more
+   resolution to work with), then tries the native detector first and
+   falls back to ZXing if it comes up empty — instead of picking only one
+   engine for the whole session, this gives every frame two chances. */
+async function bcDecodeFrame() {
+  if(bcDecoding) return;
+  const vid=document.getElementById("bcVideo");
+  if(!vid || vid.readyState<2 || vid.videoWidth===0) return;
+  bcDecoding=true;
+  try {
+    const crop=getBcCropRect(vid);
+    const cvs=document.getElementById("bcCanvas");
+    const ctx=cvs.getContext("2d",{willReadFrequently:true});
+    let sx=0, sy=0, sw=vid.videoWidth, sh=vid.videoHeight;
+    if(crop){ sx=crop.sx; sy=crop.sy; sw=crop.sw; sh=crop.sh; }
+    const UPSCALE = 2.4;
+    const MAX_OUT_W = 1100;
+    let outW=Math.round(sw*UPSCALE);
+    if(outW>MAX_OUT_W){ outW=MAX_OUT_W; }
+    const outH=Math.round(sh*(outW/sw));
+    cvs.width=outW; cvs.height=outH;
+    ctx.drawImage(vid, sx, sy, sw, sh, 0, 0, outW, outH);
+
+    let code=null;
+    if(bcDetector){
+      try {
+        const results=await bcDetector.detect(cvs);
+        if(results.length>0) code=results[0].rawValue;
+      } catch(e){}
+    }
+    if(!code && bcZXing){
+      try { const res=await bcZXing.decodeFromCanvas(cvs); if(res) code=res.getText(); } catch(e){}
+    }
+    if(code){
+      const now=Date.now();
+      const rawCode=String(code);
+      if(rawCode===lastBcCode && (now-lastBcTime)<SAME_CODE_COOLDOWN){ return; }
+      lastBcCode=rawCode; lastBcTime=now;
+      onBarcodeFound(rawCode);
+    }
+  } finally {
+    bcDecoding=false;
+  }
+}
+
+/* ════ ON BARCODE FOUND — Spare Part Mode ════ */
+function onBarcodeFound(rawCode) {
+  beep();
+  const fl=document.getElementById("bcFlash");
+  fl.classList.add("pop"); setTimeout(()=>fl.classList.remove("pop"),100);
+  const sf=document.getElementById("scanFlash");
+  sf.classList.add("flash"); setTimeout(()=>sf.classList.remove("flash"),110);
+  const parsed = parseBarcodeSuffix(rawCode);
+  const cleanCode = parsed.code;
+  const addQty = parsed.qty;
+  document.getElementById("bcFeedback").textContent="🔍 "+cleanCode.substring(0,22)+"…";
+  lookupUID(cleanCode)
+    .then(data=>{
+      if(!data||!data.variant){
+        showToast("Not found: "+cleanCode.substring(0,16),"error",2500);
+        document.getElementById("bcFeedback").textContent="❌ Not found: "+cleanCode.substring(0,18);
+        lastBcTime = Date.now() - SAME_CODE_COOLDOWN + 3000;
+      } else {
+        addOrIncrItem(data.variant, Number(data.mrp)||0, addQty);
+        document.getElementById("bcFeedback").textContent="✅ "+data.variant+" ×"+items[data.variant].qty;
+        showToast(data.variant+" +"+addQty+" (×"+items[data.variant].qty+")","success",1600);
+      }
+    })
+    .catch(()=>{
+      showToast("Lookup error","error");
+      document.getElementById("bcFeedback").textContent="❌ Lookup error";
+      lastBcTime=0;
+    });
+}
+
+/* ════ SHARED ITEM ADD/INCREMENT ════ */
+function addOrIncrItem(variant, mrp, addQty) {
+  const q = Number(addQty) || 1;
+  if(!items[variant]) items[variant]={variant,qty:q,mrp,exceeded:false};
+  else items[variant].qty += q;
+  render();
+}
+
+/* ════ MANUAL EDIT TOGGLE — shows/hides the fixed Add Item box ════ */
+function toggleEdit() {
+  manualMode=!manualMode;
+  document.getElementById("editHead").style.display=manualMode?"":"none";
+  document.getElementById("tActionFoot").style.display=manualMode?"":"none";
+  document.getElementById("addItemBox").style.display=manualMode?"block":"none";
+  if(manualMode) populateVariantDatalist();
+  document.getElementById("editBtn").innerHTML=manualMode
+    ? `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg> Lock`
+    : `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Manual`;
+  render();
+}
+
+/* ════ AUTOCOMPLETE DATALIST ════ */
+function populateVariantDatalist(){
+  const dl=document.getElementById("stockVariantList");
+  if(!dl) return;
+  dl.innerHTML=variantNames.map(v=>`<option value="${String(v).replace(/"/g,'&quot;')}"></option>`).join("");
+}
+
+/* ════ RENDER TABLE ════ */
+function render() {
+  const keys=Object.keys(items);
+  document.getElementById("itemCount").textContent=keys.length;
+  if(keys.length===0){
+    document.getElementById("tbody").innerHTML=`<tr><td colspan="5"><div class="empty-state"><svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><p>No items yet.<br>Scan or add manually.</p></div></td></tr>`;
+    document.getElementById("tQty").textContent="0";
+    document.getElementById("tMrp").textContent="₹0";
+    document.getElementById("tTotal").textContent="₹0";
+    document.getElementById("tQtyTop").textContent="0";
+    return;
+  }
+  let html="",tq=0,tm=0,tt=0;
+  keys.forEach(key=>{
+    const i=items[key], q=Number(i.qty)||0, m=Number(i.mrp)||0;
+    const lineTotal=q*m;
+    tq+=q; tm+=m; tt+=lineTotal;
+    const excBadge=i.exceeded?`<span class="exceeded-badge">⚠ Qty Exceeded</span>`:"";
+    const filledBadge=i.alreadyFull?`<span class="filled-badge">🔒 Already Filled</span>`:"";
+    const rowClass=i.exceeded?"exceeded-row":i.alreadyFull?"filled-row":"";
+    html+=`<tr class="${rowClass}">
+      <td style="text-align:left;font-weight:500;font-size:12px">
+        ${manualMode?`<input type="text" value="${i.variant}" style="width:100%;text-align:left" onchange="items['${key}'].variant=this.value">`:i.variant}
+        ${!manualMode?excBadge+filledBadge:""}
+      </td>
+      <td>${manualMode?`<input type="number" value="${q}" onchange="items['${key}'].qty=Number(this.value);render()">`:`<b>${q}</b>`}</td>
+      <td>${manualMode?`<input type="number" value="${m}" onchange="items['${key}'].mrp=Number(this.value);render()">`:`₹${m}`}</td>
+      <td><b>₹${lineTotal.toLocaleString("en-IN")}</b></td>
+      ${manualMode?`<td><button class="btn btn-danger btn-sm" onclick="removeItem('${key}')">✕</button></td>`:`<td></td>`}
+    </tr>`;
+  });
+  document.getElementById("tbody").innerHTML=html;
+  document.getElementById("tQty").textContent=tq;
+  document.getElementById("tMrp").textContent="₹"+tm.toLocaleString("en-IN");
+  document.getElementById("tTotal").textContent="₹"+tt.toLocaleString("en-IN");
+  document.getElementById("tQtyTop").textContent=tq;
+}
+
+/* ════ ADD ITEM FROM INPUT ════
+   - Suggests variants from Stock Sheet col B (datalist).
+   - Auto-fills MRP when found.
+   - Does NOT add anything if not found (just shows message). */
+function addItemFromInput(){
+  const input=document.getElementById("addItemInput");
+  if(!input) return;
+  const typed=input.value.trim();
+  if(!typed){ showToast("Type a variant name","warning",1800); return; }
+  const found=lookupMrpByVariant(typed);
+  if(found){
+    if(!items[found.variant]) items[found.variant]={variant:found.variant,qty:1,mrp:found.mrp,exceeded:false};
+    else items[found.variant].qty++;
+    showToast("Added: "+found.variant+" — MRP ₹"+found.mrp,"success",1800);
+    input.value="";
+    render();
+    setTimeout(()=>{ const el=document.getElementById("addItemInput"); if(el) el.focus(); },50);
+  } else {
+    showToast("\""+typed+"\" not found in Stock Sheet","error",2500);
+    input.value="";
+    setTimeout(()=>{ const el=document.getElementById("addItemInput"); if(el) el.focus(); },50);
+  }
+}
+function removeItem(k){delete items[k];render();}
+
+/* ════ TOAST ════ */
+function showToast(msg,type="info",dur=2600){
+  const icons={success:"✅",error:"❌",warning:"⚠️",info:"ℹ️"};
+  const c=document.getElementById("toastContainer");
+  const t=document.createElement("div");
+  t.className="toast "+type;
+  t.innerHTML=`<span>${icons[type]||"•"}</span><span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(()=>{t.style.cssText="opacity:0;transition:opacity .25s";setTimeout(()=>t.remove(),260);},dur);
+}
+
+/* ════ PAGE NAV ════ */
+function goPage(n){
+  currentPage=n;
+  // Stop any active scanner/camera when leaving the entry page so the
+  // decode loop / camera stream doesn't keep running in the background
+  // (a common cause of the page freezing).
+  if(n!==1){
+    if(qrScanning) closeQRScanner();
+    if(bcStream)   closeBCScanner();
+  }
+  document.getElementById("page1").classList.toggle("active",n===1);
+  document.getElementById("page2").classList.toggle("active",n===2);
+  document.getElementById("step1tab").className="step"+(n===1?" active":n>1?" done":"");
+  document.getElementById("step2tab").className="step"+(n===2?" active":"");
+  if(n===2) refreshSummary();
+  window.scrollTo(0,0);
+}
+function goToPage2(){
+  if(!document.getElementById("challan").value.trim()){showToast("Enter "+DOC_CONFIG[docType].numberLabel,"error");return;}
+  if(!document.getElementById("dealer").value){showToast("Select Sales Officer","error");return;}
+  if(!document.getElementById("date").value){showToast("Select Date","error");return;}
+  if(!document.getElementById("dealerName").value.trim()){showToast("Enter Dealer Name","error");return;}
+  if(Object.keys(items).length===0){showToast("Add at least one item","error");return;}
+  goPage(2);
+}
+function refreshSummary(){
+  const cfg=DOC_CONFIG[docType];
+  const ch=document.getElementById("challan").value,so=document.getElementById("dealer").value;
+  const dn=document.getElementById("dealerName").value,dt=document.getElementById("date").value;
+  let tq=0,tm=0;
+  Object.values(items).forEach(i=>{tq+=Number(i.qty)||0;tm+=(Number(i.qty)||0)*(Number(i.mrp)||0);});
+  document.getElementById("summaryBox").innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px">
+      <div style="background:#f8faff;border-radius:8px;padding:10px;border:1px solid #d1daf7"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px">${cfg.summaryNumberLabel}</div><div style="font-weight:700;font-size:13px">${ch}</div></div>
+      <div style="background:#f8faff;border-radius:8px;padding:10px;border:1px solid #d1daf7"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px">Date</div><div style="font-weight:700;font-size:13px">${fmtDate(dt)}</div></div>
+      <div style="background:#f8faff;border-radius:8px;padding:10px;border:1px solid #d1daf7"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px">SO</div><div style="font-weight:700;font-size:13px">${so}</div></div>
+      <div style="background:#f8faff;border-radius:8px;padding:10px;border:1px solid #d1daf7"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px">Dealer</div><div style="font-weight:700;font-size:13px">${dn}</div></div>
+    </div>
+    ${lastBillNo!==""?`<div style="background:linear-gradient(90deg,#fef3c7,#fffbeb);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;margin-top:6px;border:1px solid #fcd34d"><span style="font-size:10px;color:#92400e;text-transform:uppercase;letter-spacing:.7px;font-weight:700">${cfg.deliveryLabel}</span><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:var(--navy)">${lastBillNo}</span></div>`:""}
+    <div style="background:linear-gradient(90deg,#dbeafe,#eff6ff);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;margin-top:6px;border:1px solid #bfdbfe">
+      <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--navy)">${Object.keys(items).length} VARIANTS</span>
+      <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--navy)">Qty: ${tq} &nbsp;|&nbsp; ₹${tm.toLocaleString("en-IN")}</span>
+    </div>`;
+}
+
+/* ════ VALIDATION ════ */
+function checkFields(){
+  if(!document.getElementById("challan").value.trim()){showToast("Enter "+DOC_CONFIG[docType].numberLabel,"error");return false;}
+  if(!document.getElementById("dealer").value){showToast("Select Sales Officer","error");return false;}
+  if(!document.getElementById("date").value){showToast("Select Date","error");return false;}
+  if(!document.getElementById("dealerName").value.trim()){showToast("Enter Dealer Name","error");return false;}
+  if(!photoData){showToast("Add a confirmation photo or signature","error");return false;}
+  if(Object.keys(items).length===0){showToast("No items to submit","error");return false;}
+  return true;
+}
+
+/* ════ CAMERA (confirmation photo — preferred) ════ */
+function openCamera(){
+  closeSign(); // make sure signature pad is closed
+  navigator.mediaDevices.getUserMedia({video:{facingMode:"environment",width:{ideal:1280},height:{ideal:720}}})
+    .then(s=>{
+      camStream=s;
+      document.getElementById("cameraBox").style.display="block";
+      document.getElementById("video").srcObject=s;
+    })
+    .catch(()=>showToast("Camera access denied — you can use Sign instead","error",3000));
+}
+function capturePhoto(){
+  const cvs=document.getElementById("canvas"),vid=document.getElementById("video");
+  cvs.width=vid.videoWidth||320; cvs.height=vid.videoHeight||240;
+  cvs.getContext("2d").drawImage(vid,0,0,cvs.width,cvs.height);
+  photoData=cvs.toDataURL("image/jpeg",.82);
+  confirmType="photo";
+  if(camStream) camStream.getTracks().forEach(t=>t.stop());
+  document.getElementById("video").srcObject=null;
+  document.getElementById("cameraBox").style.display="none";
+  document.getElementById("preview").innerHTML="";
+  document.getElementById("confirmChooser").style.display="none";
+  document.getElementById("confirmHint").style.display="none";
+  document.getElementById("photoConfirmedBox").style.display="flex";
+  document.getElementById("photoConfirmedBox").className="photo-confirmed";
+  document.getElementById("photoConfirmedBox").innerHTML=`
+    <img src="${photoData}" alt="photo">
+    <div><div class="pc-text">✅ Photo Captured</div><div class="pc-sub">Tap Redo to change</div></div>
+    <button class="btn btn-outline btn-sm" onclick="resetConfirm()" style="margin-left:auto">Redo</button>`;
+  showToast("Photo captured!","success");
+}
+function retakePhoto(){
+  photoData=""; confirmType="";
+  document.getElementById("photoConfirmedBox").style.display="none";
+  openCamera();
+}
+
+/* ════ SIGNATURE (fallback when photo not working) ════ */
+let signCtx=null, signing=false, signHasInk=false;
+function openSign(){
+  // close camera if open
+  if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; }
+  document.getElementById("video").srcObject=null;
+  document.getElementById("cameraBox").style.display="none";
+  document.getElementById("signBox").style.display="block";
+  // Size & init the canvas AFTER it is visible, so its measured width is correct
+  // (sizing while still hidden returns 0 and makes strokes land in the wrong spot).
+  requestAnimationFrame(()=>{ setTimeout(initSignCanvas, 30); });
+}
+function initSignCanvas(){
+  const cvs=document.getElementById("signCanvas");
+  const rect=cvs.getBoundingClientRect();
+  const w=Math.max(280, Math.round(rect.width || cvs.clientWidth || 320));
+  const h=Math.max(150, Math.round(rect.height || 160));
+  cvs.width=w; cvs.height=h;
+  signCtx=cvs.getContext("2d");
+  signCtx.fillStyle="#ffffff"; signCtx.fillRect(0,0,cvs.width,cvs.height);
+  signCtx.strokeStyle="#0d1b3e"; signCtx.lineWidth=3;
+  signCtx.lineCap="round"; signCtx.lineJoin="round";
+  signHasInk=false;
+  bindSignEvents(cvs);
+}
+function signPos(cvs,e){
+  const r=cvs.getBoundingClientRect();
+  const t=(e.touches&&e.touches[0])?e.touches[0]:((e.changedTouches&&e.changedTouches[0])?e.changedTouches[0]:e);
+  const rw=r.width||cvs.width, rh=r.height||cvs.height;
+  return { x:(t.clientX-r.left)*(cvs.width/rw), y:(t.clientY-r.top)*(cvs.height/rh) };
+}
+function bindSignEvents(cvs){
+  if(cvs._signBound) return; // bind once
+  cvs._signBound=true;
+  const start=e=>{ e.preventDefault(); signing=true; const p=signPos(cvs,e); signCtx.beginPath(); signCtx.moveTo(p.x,p.y);
+    // draw a small dot so a single tap also registers
+    signCtx.lineTo(p.x+0.1,p.y+0.1); signCtx.stroke(); signHasInk=true; };
+  const move =e=>{ if(!signing) return; e.preventDefault(); const p=signPos(cvs,e); signCtx.lineTo(p.x,p.y); signCtx.stroke(); signHasInk=true; };
+  const end  =e=>{ signing=false; };
+  cvs.addEventListener("mousedown",start); cvs.addEventListener("mousemove",move); window.addEventListener("mouseup",end);
+  cvs.addEventListener("touchstart",start,{passive:false}); cvs.addEventListener("touchmove",move,{passive:false}); cvs.addEventListener("touchend",end);
+}
+function clearSign(){
+  if(!signCtx) return;
+  const cvs=document.getElementById("signCanvas");
+  signCtx.fillStyle="#ffffff"; signCtx.fillRect(0,0,cvs.width,cvs.height);
+  signHasInk=false;
+}
+function saveSign(){
+  if(!signHasInk){ showToast("Please sign first","warning",1800); return; }
+  const cvs=document.getElementById("signCanvas");
+  photoData=cvs.toDataURL("image/jpeg",.85);
+  confirmType="sign";
+  document.getElementById("signBox").style.display="none";
+  document.getElementById("confirmChooser").style.display="none";
+  document.getElementById("confirmHint").style.display="none";
+  document.getElementById("photoConfirmedBox").style.display="flex";
+  document.getElementById("photoConfirmedBox").className="photo-confirmed";
+  document.getElementById("photoConfirmedBox").innerHTML=`
+    <img src="${photoData}" alt="sign">
+    <div><div class="pc-text">✅ Signature Saved</div><div class="pc-sub">Tap Redo to change</div></div>
+    <button class="btn btn-outline btn-sm" onclick="resetConfirm()" style="margin-left:auto">Redo</button>`;
+  showToast("Signature saved!","success");
+}
+function closeSign(){
+  document.getElementById("signBox").style.display="none";
+}
+/* Reset back to the chooser (used by both Photo and Sign "Redo") */
+function resetConfirm(){
+  photoData=""; confirmType="";
+  if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; }
+  document.getElementById("video").srcObject=null;
+  document.getElementById("cameraBox").style.display="none";
+  document.getElementById("signBox").style.display="none";
+  document.getElementById("photoConfirmedBox").style.display="none";
+  document.getElementById("confirmChooser").style.display="flex";
+  document.getElementById("confirmHint").style.display="block";
+}
+
+/* ════ DOWNLOAD BILL (with Total column) — splits into pages of 30 lines ════ */
+function downloadBill(matchedItems){
+  const ch=document.getElementById("challan").value,so=document.getElementById("dealer").value;
+  const dn=document.getElementById("dealerName").value,dt=document.getElementById("date").value;
+  const time=new Date().toLocaleTimeString("en-IN");
+  // Snapshot the bill number, photo/sign and its type NOW, so if the form resets
+  // while a multi-page bill is still rendering, the later pages still use the
+  // correct values.
+  const billNoSnap=lastBillNo, photoSnap=photoData, typeSnap=confirmType;
+  const cfgSnap=DOC_CONFIG[docType];
+
+  // Grand totals across ALL items (same on every page)
+  let tq=0,tm=0,tt=0;
+  matchedItems.forEach(i=>{
+    const q=Number(i.qty)||0, m=Number(i.mrp)||0;
+    tq+=q; tm+=m; tt+=q*m;
+  });
+
+  // Split items into pages of 30 variant lines each
+  const PER_PAGE=30;
+  const pages=[];
+  for(let p=0;p<matchedItems.length;p+=PER_PAGE) pages.push(matchedItems.slice(p,p+PER_PAGE));
+  if(pages.length===0) pages.push([]); // always at least one page
+  const totalPages=pages.length;
+
+  // Build one full page (header + info + delivery no + table) — identical layout on every page
+  function buildPageHtml(pageItems, pageIndex){
+    let rows="";
+    pageItems.forEach(i=>{
+      const q=Number(i.qty)||0, m=Number(i.mrp)||0, lt=q*m;
+      rows+=`<tr><td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;text-align:left;font-size:13px">${i.variant}</td><td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;text-align:center;font-size:13px">${q}</td><td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;text-align:right;font-size:13px">₹${m}</td><td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;text-align:right;font-size:13px">₹${lt.toLocaleString("en-IN")}</td></tr>`;
+    });
+    const isLast=(pageIndex===totalPages-1);
+    const pageBadge=(totalPages>1)?`<div style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:16px;padding:4px 12px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap">Page ${pageIndex+1} of ${totalPages}</div>`:"";
+    const pageFoot=(totalPages>1)?` &nbsp;•&nbsp; Page ${pageIndex+1} of ${totalPages}`:"";
+    return `<div style="font-family:'DM Sans',Arial,sans-serif;background:#fff;padding:28px;width:540px">
+    <div style="background:linear-gradient(135deg,#0d1b3e,#162250);padding:18px 20px;border-radius:10px;margin-bottom:18px;display:flex;align-items:center;gap:12px">
+      <div style="background:#f59e0b;border-radius:7px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#0d1b3e;flex-shrink:0">AD</div>
+      <div style="flex:1"><div style="font-size:17px;font-weight:800;color:#fff;letter-spacing:.3px">AKAI DISTRIBUTORS</div><div style="font-size:10px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:1px">${cfgSnap.billSubtitle}</div></div>
+      ${pageBadge}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      <div style="background:#f8faff;border-radius:7px;padding:10px;border:1px solid #d1daf7"><div style="font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px">${cfgSnap.numberLabel}</div><div style="font-weight:700;font-size:13px">${ch}</div></div>
+      <div style="background:#f8faff;border-radius:7px;padding:10px;border:1px solid #d1daf7"><div style="font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px">Date &amp; Time</div><div style="font-weight:700;font-size:13px">${fmtDate(dt)} <span style="font-size:10px;color:#64748b">${time}</span></div></div>
+      <div style="background:#f8faff;border-radius:7px;padding:10px;border:1px solid #d1daf7"><div style="font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px">Sales Officer</div><div style="font-weight:700;font-size:13px">${so}</div></div>
+      <div style="background:#f8faff;border-radius:7px;padding:10px;border:1px solid #d1daf7"><div style="font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px">Dealer</div><div style="font-weight:700;font-size:13px">${dn}</div></div>
+    </div>
+    ${billNoSnap!==""?`<div style="background:linear-gradient(90deg,#fef3c7,#fffbeb);border-radius:7px;padding:10px 12px;border:1px solid #fcd34d;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:9px;color:#92400e;text-transform:uppercase;letter-spacing:.7px">${cfgSnap.deliveryLabel}</div><div style="font-weight:800;font-size:15px;color:#0d1b3e">${billNoSnap}</div></div>`:""}
+    <table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+      <thead><tr style="background:linear-gradient(90deg,#e8eeff,#f0f4ff)">
+        <th style="padding:9px 10px;text-align:left;font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.7px;border-bottom:2px solid #d1daf7">Variant</th>
+        <th style="padding:9px 10px;text-align:center;font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.7px;border-bottom:2px solid #d1daf7">Qty</th>
+        <th style="padding:9px 10px;text-align:right;font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.7px;border-bottom:2px solid #d1daf7">MRP</th>
+        <th style="padding:9px 10px;text-align:right;font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.7px;border-bottom:2px solid #d1daf7">Total</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot><tr style="background:linear-gradient(90deg,#dbeafe,#eff6ff)">
+        <td style="padding:9px 10px;font-weight:800;font-size:13px">TOTAL</td>
+        <td style="padding:9px 10px;text-align:center;font-weight:800;font-size:13px">${tq}</td>
+        <td style="padding:9px 10px;text-align:right;font-weight:800;font-size:13px">₹${tm.toLocaleString("en-IN")}</td>
+        <td style="padding:9px 10px;text-align:right;font-weight:800;font-size:13px">₹${tt.toLocaleString("en-IN")}</td>
+      </tr></tfoot>
+    </table>
+    ${(isLast && photoSnap)?`<div style="margin-top:14px;text-align:center"><div style="font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px">${typeSnap==="sign"?"Signature":"Confirmation Photo"}</div><img src="${photoSnap}" style="max-width:${typeSnap==="sign"?"220":"140"}px;border-radius:7px;border:2px solid #10b981"></div>`:""}
+    <div style="margin-top:14px;text-align:center;font-size:9px;color:#94a3b8">AKAI Distributors — ${cfgSnap.billSubtitle}${pageFoot}</div>
+    <div style="margin-top:8px;text-align:center;font-size:10px;color:#475569;font-weight:800">Disclaimer: data is entered manually and mistakes may occur</div>
+  </div>`;
+  }
+
+  // Render each page sequentially and download as separate images
+  const bill=document.getElementById("bill");
+  function renderPage(idx){
+    if(idx>=pages.length){ bill.style.display="none"; bill.innerHTML=""; return; }
+    bill.innerHTML=buildPageHtml(pages[idx], idx);
+    bill.style.display="block";
+    html2canvas(bill,{scale:1.6,useCORS:true,backgroundColor:"#ffffff"}).then(c=>{
+      const a=document.createElement("a");
+      a.href=c.toDataURL("image/jpeg",.92);
+      const suffix=(totalPages>1)?`_page${idx+1}`:"";
+      a.download=`${cfgSnap.filePrefix}_${ch}_${fmtDate(dt)}${suffix}.jpg`;
+      a.click();
+      setTimeout(()=>renderPage(idx+1), 700); // delay so downloads don't collide
+    }).catch(()=>{ setTimeout(()=>renderPage(idx+1), 700); });
+  }
+  renderPage(0);
+}
+
+/* ════ SUBMIT ════ */
+function submitData(){
+  if(!checkFields()) return;
+  document.getElementById("processingOverlay").classList.add("active");
+  document.getElementById("submitBtn").disabled=true;
+  const challanVal=document.getElementById("challan").value.trim();
+  const soVal=document.getElementById("dealer").value.trim();
+  const dealerVal=document.getElementById("dealerName").value.trim();
+  const dateVal=fmtDate(document.getElementById("date").value);
+  const cleanItems=Object.values(items).map(i=>({variant:String(i.variant).trim(),qty:Number(i.qty)||0,mrp:Number(i.mrp)||0}));
+  // NOTE: photo/signature is used only for the local download — the server does
+  // not store it — so we DON'T send it in the POST. This keeps the request body
+  // small and makes submit noticeably faster.
+  fetch(API_URL,{
+    method:"POST",
+    body:new URLSearchParams({data:JSON.stringify({
+      docType:docType, // "challan" or "order" — tells the backend which sheet to write to
+      challan:challanVal,so:soVal,dealer:dealerVal,
+      date:dateVal,items:cleanItems,billOffset:BILL_NUMBER_OFFSET
+    })})
+  })
+  .then(async res=>{
+    const text=await res.text();
+    let data;
+    try{data=JSON.parse(text);}catch{throw new Error("Invalid server response");}
+    if(data.status!=="success") throw new Error(data.message||"Server error");
+    lastBillNo = (data.billNo !== undefined && data.billNo !== null) ? data.billNo : "";
+    const matchedForBill=[];
+    let newItems={};
+    (data.matched||[]).forEach(m=>{
+      if(m.qtyAccepted>0) matchedForBill.push({variant:m.variant,qty:m.qtyAccepted,mrp:m.mrp});
+      if(m.qtyExceeded>0) newItems[m.variant]={variant:m.variant,qty:m.qtyExceeded,mrp:m.mrp,exceeded:true};
+    });
+    (data.notMatched||[]).forEach(i=>{
+      newItems[i.variant]={variant:i.variant,qty:i.qty,mrp:i.mrp,exceeded:false};
+    });
+    items=newItems; render();
+    refreshSummary(); // update summary so Delivery Number shows on page 2
+    const exceedCount=(data.matched||[]).filter(m=>m.qtyExceeded>0).length;
+    const noMatchCount=(data.notMatched||[]).length;
+    // Kick off the download right after showing results (non-blocking)
+    if(matchedForBill.length>0) setTimeout(()=>downloadBill(matchedForBill), 50);
+    if(exceedCount+noMatchCount===0){
+      showToast(DOC_CONFIG[docType].deliveryLabel+": "+lastBillNo+" — submitted!","success",4000);
+      setTimeout(()=>{
+        document.getElementById("challan").value="";
+        document.getElementById("dealer").value="";
+        document.getElementById("dealerName").value="";
+        lastBillNo="";
+        document.getElementById("preview").innerHTML="";
+        resetConfirm();
+        goPage(1);
+        if(DOC_CONFIG[docType].autoNumber) fetchNextOrderNo(); // pre-fill the next order no.
+      },1600);
+    } else {
+      let msg="";
+      if(exceedCount>0) msg+=`${exceedCount} variant(s) qty exceeded. `;
+      if(noMatchCount>0) msg+=`${noMatchCount} variant(s) not matched.`;
+      showToast("⚠ "+msg.trim()+" Check table.","warning",6000);
+      setTimeout(()=>goPage(1),2200);
+    }
+  })
+  .catch(err=>{showToast("Submit failed: "+err.message,"error",5000);console.error(err);})
+  .finally(()=>{
+    document.getElementById("processingOverlay").classList.remove("active");
+    document.getElementById("submitBtn").disabled=false;
+  });
+}
+</script>
+</body>
+</html>
