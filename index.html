@@ -1309,38 +1309,46 @@ function submitData(){
     try{data=JSON.parse(text);}catch{throw new Error("Invalid server response");}
     if(data.status!=="success") throw new Error(data.message||"Server error");
     lastOrderNo = (data.orderNo !== undefined && data.orderNo !== null) ? data.orderNo : orderNoVal;
-    const matchedForBill=[];
-    let newItems={};
+
+    // The backend logs every item at its FULL requested qty regardless of
+    // stock status — exceeded or not-in-Stock-Sheet items are logged too,
+    // not skipped. So the downloaded slip uses the full requested qty,
+    // and the order is fully cleared here (nothing is left to "resubmit",
+    // since resubmitting would create a duplicate row in the sheet).
+    const fullForBill=[];
+    const exceededNames=[];
+    const notMatchedNames=[];
     (data.matched||[]).forEach(m=>{
-      if(m.qtyAccepted>0) matchedForBill.push({variant:m.variant,qty:m.qtyAccepted,mrp:m.mrp});
-      if(m.qtyExceeded>0) newItems[m.variant]={variant:m.variant,qty:m.qtyExceeded,mrp:m.mrp,exceeded:true};
+      const fullQty = m.qtyAccepted + m.qtyExceeded;
+      fullForBill.push({variant:m.variant, qty:fullQty, mrp:m.mrp});
+      if(m.qtyExceeded>0) exceededNames.push(`${m.variant} (only ${m.qtyAccepted} in stock, ${fullQty} logged)`);
     });
     (data.notMatched||[]).forEach(i=>{
-      newItems[i.variant]={variant:i.variant,qty:i.qty,mrp:i.mrp,exceeded:false};
+      fullForBill.push({variant:i.variant, qty:i.qty, mrp:i.mrp});
+      notMatchedNames.push(i.variant);
     });
-    items=newItems; render();
+
+    items={}; render(); // everything was logged in full — clear the working list
     refreshSummary();
-    const exceedCount=(data.matched||[]).filter(m=>m.qtyExceeded>0).length;
-    const noMatchCount=(data.notMatched||[]).length;
-    if(matchedForBill.length>0) setTimeout(()=>downloadBill(matchedForBill), 50);
-    if(exceedCount+noMatchCount===0){
-      showToast("Order Number: "+lastOrderNo+" — submitted!","success",4000);
-      setTimeout(()=>{
-        document.getElementById("dealer").value="";
-        document.getElementById("dealerName").value="";
-        lastOrderNo="";
-        document.getElementById("preview").innerHTML="";
-        resetConfirm();
-        goPage(1);
-        fetchNextOrderNo(); // pre-fill the next order no.
-      },1600);
-    } else {
-      let msg="";
-      if(exceedCount>0) msg+=`${exceedCount} variant(s) qty exceeded. `;
-      if(noMatchCount>0) msg+=`${noMatchCount} variant(s) not matched.`;
-      showToast("⚠ "+msg.trim()+" Check table.","warning",6000);
-      setTimeout(()=>goPage(1),2200);
+
+    if(fullForBill.length>0) setTimeout(()=>downloadBill(fullForBill), 50);
+
+    showToast("Order Number: "+lastOrderNo+" — submitted!","success",4000);
+    if(exceededNames.length>0){
+      showToast("⚠ Stock exceeded but logged in full — "+exceededNames.join(", "),"warning",6500);
     }
+    if(notMatchedNames.length>0){
+      showToast("ℹ Not in Stock Sheet but logged — "+notMatchedNames.join(", "),"warning",6500);
+    }
+    setTimeout(()=>{
+      document.getElementById("dealer").value="";
+      document.getElementById("dealerName").value="";
+      lastOrderNo="";
+      document.getElementById("preview").innerHTML="";
+      resetConfirm();
+      goPage(1);
+      fetchNextOrderNo(); // pre-fill the next order no.
+    },1800);
   })
   .catch(err=>{showToast("Submit failed: "+err.message,"error",5000);console.error(err);})
   .finally(()=>{
