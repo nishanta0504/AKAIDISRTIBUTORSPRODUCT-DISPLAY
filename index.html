@@ -490,18 +490,27 @@ let lastQrTime  = 0;
 
 /* ════ BARCODE FORMATS — restrict the barcode scanner to real 1D spare-part
    symbologies only (not QR/DataMatrix/etc). Restricting formats makes each
-   decode attempt faster and meaningfully cuts down on misreads. ════ */
-const BARCODE_FORMATS = [
-  Html5QrcodeSupportedFormats.CODE_128,
-  Html5QrcodeSupportedFormats.CODE_39,
-  Html5QrcodeSupportedFormats.CODE_93,
-  Html5QrcodeSupportedFormats.EAN_13,
-  Html5QrcodeSupportedFormats.EAN_8,
-  Html5QrcodeSupportedFormats.UPC_A,
-  Html5QrcodeSupportedFormats.UPC_E,
-  Html5QrcodeSupportedFormats.ITF,
-  Html5QrcodeSupportedFormats.CODABAR
-];
+   decode attempt faster and meaningfully cuts down on misreads.
+   IMPORTANT: this is a function, not a top-level constant — it's only
+   evaluated when the barcode scanner is actually opened. If it were
+   evaluated immediately at page load and the html5-qrcode CDN script
+   happened to be slow/blocked/failed, referencing Html5QrcodeSupportedFormats
+   here would throw and silently break the ENTIRE app's script (not just
+   scanning). Deferring it means a scanner-library hiccup only affects the
+   scanner buttons (which already show a clear error), not the whole app. */
+function getBarcodeFormats(){
+  return [
+    Html5QrcodeSupportedFormats.CODE_128,
+    Html5QrcodeSupportedFormats.CODE_39,
+    Html5QrcodeSupportedFormats.CODE_93,
+    Html5QrcodeSupportedFormats.EAN_13,
+    Html5QrcodeSupportedFormats.EAN_8,
+    Html5QrcodeSupportedFormats.UPC_A,
+    Html5QrcodeSupportedFormats.UPC_E,
+    Html5QrcodeSupportedFormats.ITF,
+    Html5QrcodeSupportedFormats.CODABAR
+  ];
+}
 
 /* ════ BEEP ════ */
 const beep = (() => {
@@ -711,13 +720,25 @@ function switchScanMode(mode) {
    regardless of which scanner mode was used to add each item. */
 function openQRScanner() {
   if(bcScanning) closeBCScanner();
+  if(typeof Html5Qrcode === "undefined" || typeof Html5QrcodeSupportedFormats === "undefined"){
+    showToast("Scanner library failed to load — check your internet connection and reload the page","error",5000);
+    return;
+  }
   document.getElementById("readerBox").style.display="block";
   if(qrScanning) return;
   document.getElementById("scanFeedback").textContent="Starting camera…";
-  qrScanner = new Html5Qrcode("reader", {
-    verbose:false,
-    formatsToSupport:[Html5QrcodeSupportedFormats.QR_CODE]
-  });
+  let qrScannerInitError=null;
+  try{
+    qrScanner = new Html5Qrcode("reader", {
+      verbose:false,
+      formatsToSupport:[Html5QrcodeSupportedFormats.QR_CODE]
+    });
+  }catch(err){ qrScannerInitError=err; }
+  if(qrScannerInitError){
+    showToast("Couldn't start scanner: "+qrScannerInitError.message,"error",4000);
+    document.getElementById("readerBox").style.display="none";
+    return;
+  }
   qrScanner.start(
     {facingMode:"environment"},
     {fps:15, qrbox:{width:230,height:230}, aspectRatio:1.0, disableFlip:false,
@@ -780,13 +801,25 @@ function closeQRScanner() {
    camera is ever active at a time. */
 function openBCScanner() {
   if(qrScanning) closeQRScanner();
+  if(typeof Html5Qrcode === "undefined" || typeof Html5QrcodeSupportedFormats === "undefined"){
+    showToast("Scanner library failed to load — check your internet connection and reload the page","error",5000);
+    return;
+  }
   document.getElementById("bcBox").style.display="block";
   if(bcScanning) return;
   document.getElementById("bcFeedback").textContent="Starting camera…";
-  bcScanner = new Html5Qrcode("bcReader", {
-    verbose:false,
-    formatsToSupport: BARCODE_FORMATS
-  });
+  let bcScannerInitError=null;
+  try{
+    bcScanner = new Html5Qrcode("bcReader", {
+      verbose:false,
+      formatsToSupport: getBarcodeFormats()
+    });
+  }catch(err){ bcScannerInitError=err; }
+  if(bcScannerInitError){
+    showToast("Couldn't start scanner: "+bcScannerInitError.message,"error",4000);
+    document.getElementById("bcBox").style.display="none";
+    return;
+  }
   bcScanner.start(
     {facingMode:"environment"},
     {fps:15, qrbox:{width:280,height:130}, aspectRatio:1.6, disableFlip:false,
